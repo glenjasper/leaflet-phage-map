@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Leaflet</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Load Leaflet: http://leafletjs.com/ -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+
+        <!-- https://github.com/StephSaephan/leaflet-map-example -->
+        <script src="resources/js/leaflet-providers.js" type="text/javascript"></script>
+
+        <!-- https://github.com/ismyrnow/leaflet-groupedlayercontrol -->
+        <link rel="stylesheet" href="resources/css/leaflet.groupedlayercontrol.css">
+        <script src="resources/js/leaflet.groupedlayercontrol.js" type="text/javascript"></script>
+
+        <!-- https://github.com/Norkart/Leaflet-MiniMap -->
+        <link rel="stylesheet" href="resources/css/Control.MiniMap.css">
+        <script src="resources/js/Control.MiniMap.js" type="text/javascript"></script>
+
+        <!-- https://github.com/heyman/leaflet-usermarker -->
+        <link rel="stylesheet" href="resources/css/leaflet.usermarker.css">
+        <script src="resources/js/leaflet.usermarker.js" type="text/javascript"></script>
+
+        <!-- https://github.com/CliffCloud/Leaflet.EasyButton -->
+        <link rel="stylesheet" href="resources/css/easy-button.css">
+        <script src="resources/js/easy-button.js" type="text/javascript"></script>
+
+        <!-- fontawesome, jquery and bootstrap -->
+        <link href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <!-- https://www.codexworld.com/export-html-table-data-to-excel-using-javascript -->
+        <script src="resources/js/exportTableToExcel.js" type="text/javascript"></script>
+
+        <!-- legend -->
+        <link rel="stylesheet" href="resources/css/legend.css">
+
+        <style>
+            body {
+                padding: 0;
+                margin: 0;
+            }
+            html,
+            body,
+            #mapid {
+                height: 100%;
+                width: 100%;
+            }
+            .font-size-title {
+                font-size: 15px;
+                font-weight: bold;
+            }
+            .font-size-body {
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="mapid"></div>
+
+        <div id="modal-detail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <!--Header-->
+                    <div class="modal-header">
+                        <h4 class="modal-title font-size-title">Detail of Patents</h4>
+
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="#" onclick="exportTableToExcel('patent-table', 'patent-table')" title="Download Excel file">
+                            <img src='resources/image/excel-icon.png' style="width:24px">
+                        </a>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <!--Body-->
+                    <div class="modal-body">
+                        <table id="patent-table" class="table table-hover font-size-body">
+                            <thead>
+                                <tr>
+                                    <th style="width:1%">#</th>
+                                    <th style="width:17%">Applicant</th>
+                                    <th style="width:1%">Country</th>
+                                    <th style="width:13%">Code</th>
+                                    <th style="width:20%">Patent</th>
+                                    <th style="width:20%">Bacteria target</th>
+                                    <th style="width:20%">Food</th>
+                                    <th style="width:8%">Reference</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Aleshkin Andrej Vladimirovich</td>
+                                    <td>RU</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/RU2644667C1/en?oq=RU2644667C1" target='_blank' rel='noopener noreferrer'>
+                                            RU2644667C1
+                                        </a>
+                                    </td>
+                                    <td>Ah 1, Pf 1, Ro 1, Psp 6, Cf 1, Lm 1</td>
+                                    <td>
+                                        <i>Pseudomonas fluorescens</i>,
+                                        <i>Pseudomonas putida</i>,
+                                        <i>Aeromonas hydrophila</i>,
+                                        <i>Raoultella ornithinolytica</i>,
+                                        <i>Citrobacter freundii</i>,
+                                        <i>Listeria monocytogenes</i>
+                                    </td>
+                                    <td>Chilled fish</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Airbus Defence and Space GmbH</td>
+                                    <td>GE</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/EP2815652A2/de?oq=EP2815652A2" target='_blank' rel='noopener noreferrer'>
+                                            EP2815652A2
+                                        </a>
+                                    </td>
+                                    <td>M13KE bacteriophages and Enterobacteria phage HK97</td>
+                                    <td>
+                                        <i>Enterobacteria</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>CJ Cheiljedang Corporation</td>
+                                    <td>KR</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20130022579A1/en?oq=US+20130022579+A1" target='_blank' rel='noopener noreferrer'>
+                                            US20130022579A1
+                                        </a>
+                                    </td>
+                                    <td>&Phi;CJ2</td>
+                                    <td>
+                                        <i>Salmonella typhimurium</i>,
+                                        <i>Salmonella gallinarum</i>,
+                                        <i>Salmonella pullorum</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">4</th>
+                                    <td>Dalian University of Technology</td>
+                                    <td>CN</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/CN102356817A/en?oq=CN102356817A" target='_blank' rel='noopener noreferrer'>
+                                            CN102356817A
+                                        </a>
+                                    </td>
+                                    <td>vp-1 and vp-2</td>
+                                    <td>
+                                        <i>Vibrio harveyi</i>
+                                    </td>
+                                    <td>Seafood</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">5</th>
+                                    <td>Dow Global Technologies Llc</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/AR101096A1/en?oq=AR101096+(A1)" target='_blank' rel='noopener noreferrer'>
+                                            AR101096A1
+                                        </a>
+                                    </td>
+                                    <td>Unidentified phage</td>
+                                    <td>
+                                        <i>Eschirichia coli</i>,
+                                        <i>Salmonella sp.</i>,
+                                        <i>Campylobacter sp.</i>,
+                                        <i>Clostridium sp.</i>,
+                                        <i>Listeria sp.</i>,
+                                        <i>Shigella sp.</i>,
+                                        <i>Staphylococcus sp.</i>,
+                                        <i>Streptococcus sp.</i>,
+                                        <i>Vibrio sp.</i>,
+                                        <i>Yersinia sp.</i>
+                                    </td>
+                                    <td>Meats, cheeses, fruits and vegetables</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">6</th>
+                                    <td>DSM IP Assets B.V.</td>
+                                    <td>NL</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2012159774A1/en?oq=WO2012159774" target='_blank' rel='noopener noreferrer'>
+                                            WO2012159774A1
+                                        </a>
+                                    </td>
+                                    <td>ProCC P825</td>
+                                    <td>
+                                        <i>Listeria monocytogenes</i>
+                                    </td>
+                                    <td>Dairy products, fruits, vegetables, meats and fishs</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">7</th>
+                                    <td>Exponential Biotherapies, Inc.</td>
+                                    <td>NL</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2007093849A3/en?oq=wo2007093849A2" target='_blank' rel='noopener noreferrer'>
+                                            WO2007093849A3
+                                        </a>
+                                    </td>
+                                    <td>Listex P100</td>
+                                    <td>
+                                        <i>Listeria monocytogenes</i>
+                                    </td>
+                                    <td>Cheese / Chocolate milk, Hot dog, cabbage, smoked salmon / Catfish fillet / Cooked Turkey, Roast Beef / Minas Frescal Cheese, Coalho cheese / Melon, Melon Juice, Pear, Pear Juice, Apple, Apple Juice / Lettuce / Fresh cut Cantaloupe, Turkey / ready-to-eat slided pork / Sashimi / Chicken breasts / Tomato, Watermelon / Coleslaw / Fermented Fish Product (Rakfisk) / Milk / steel coupons, epoxy coated flooring coupons, polyurethane thermoplastic belting coupons</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1016/j.yrtph.2005.08.005" target='_blank' rel='noopener noreferrer'>[1]</a>, 
+                                        <a href="https://doi.org/10.1128/aem.01711-08" target='_blank' rel='noopener noreferrer'>[2]</a>,
+                                        <a href="https://doi.org/10.1089/fpd.2009.0432" target='_blank' rel='noopener noreferrer'>[3]</a>,
+                                        <a href="https://doi.org/10.1016/j.ijfoodmicro.2013.08.018" target='_blank' rel='noopener noreferrer'>[4]</a>,
+                                        <a href="https://doi.org/10.1590/s1517-83822014000100003" target='_blank' rel='noopener noreferrer'>[5]</a>,
+                                        <a href="https://doi.org/10.1016/j.fm.2013.08.018" target='_blank' rel='noopener noreferrer'>[6]</a>,
+                                        <a href="https://doi.org/10.1016/j.ijfoodmicro.2015.07.015" target='_blank' rel='noopener noreferrer'>[7]</a>,
+                                        <a href="https://doi.org/10.2903/j.efsa.2016.4565" target='_blank' rel='noopener noreferrer'>[8]</a>,
+                                        <a href="https://doi.org/10.1016/j.bjm.2017.02.010" target='_blank' rel='noopener noreferrer'>[9]</a>,
+                                        <a href="https://doi.org/10.4315/0362-028x.jfp-17-098" target='_blank' rel='noopener noreferrer'>[10]</a>,
+                                        <a href="https://doi.org/10.1016/j.foodcont.2017.02.021" target='_blank' rel='noopener noreferrer'>[11]</a>,
+                                        <a href="https://doi.org/10.1016/j.lwt.2017.08.014" target='_blank' rel='noopener noreferrer'>[12]</a>,
+                                        <a href="https://doi.org/10.3390/v11110977" target='_blank' rel='noopener noreferrer'>[13]</a>,
+                                        <a href="https://doi.org/10.3390/foods9020119" target='_blank' rel='noopener noreferrer'>[14]</a>,
+                                        <a href="https://doi.org/10.1016/j.fm.2019.103315" target='_blank' rel='noopener noreferrer'>[15]</a>,
+                                        <a href="https://doi.org/10.1111/jfs.12775" target='_blank' rel='noopener noreferrer'>[16]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">8</th>
+                                    <td>Gachon university of industry</td>
+                                    <td>KR</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/KR101188611B1/en?oq=KR101188611B1" target='_blank' rel='noopener noreferrer'>
+                                            KR101188611B1
+                                        </a>
+                                    </td>
+                                    <td>ES2 and EI-1</td>
+                                    <td>
+                                        <i>Cronobacter sakazakii</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">9</th>
+                                    <td>Huazhong Agricultural University</td>
+                                    <td>CN</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/CN110317793A/en?oq=CN110317793A" target='_blank' rel='noopener noreferrer'>
+                                            CN110317793A
+                                        </a>
+                                    </td>
+                                    <td>LPEK22 and LPEE17</td>
+                                    <td>
+                                        <i>Eschirichia coli EDL933</i>
+                                    </td>
+                                    <td>Milk and sausage</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">10</th>
+                                    <td>Huazhong Agricultural University</td>
+                                    <td>CN</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/CN106497888A/en?oq=CN106497888+A" target='_blank' rel='noopener noreferrer'>
+                                            CN106497888A
+                                        </a>
+                                    </td>
+                                    <td>LPSE1</td>
+                                    <td>
+                                        <i>Salmonella Enteritidis</i>
+                                    </td>
+                                    <td>Milk, sausage and lettuce</td>
+                                    <td>
+                                        <a href="https://doi.org/10.3389/fmicb.2018.01046" target='_blank' rel='noopener noreferrer'>[1]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">11</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20090155217A1/en?oq=US2009155217A1" target='_blank' rel='noopener noreferrer'>
+                                            US2009155217A1
+                                        </a>
+                                    </td>
+                                    <td>ECML-117 and ECML-134</td>
+                                    <td>
+                                        <i>Eschirichia coli O157:H7</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">12</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20090155329A1/en?oq=US2009155329A1" target='_blank' rel='noopener noreferrer'>
+                                            US20090155329A1
+                                        </a>
+                                    </td>
+                                    <td>ECTA-47, ECML-83, ECML-119 and ECML-122</td>
+                                    <td>
+                                        <i>Eschirichia coli</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">13</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20080311643A1/en?oq=US2008311643A1" target='_blank' rel='noopener noreferrer'>
+                                            US2008311643A1
+                                        </a>
+                                    </td>
+                                    <td>PAML-2, PAML-14, PAML-20, PAML-22, PAML-31-1, PAML-73 and PAML-75</td>
+                                    <td>
+                                        <i>Pseudomonas aeruginosa</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">14</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20070248724A1/en?oq=US2007248724A1" target='_blank' rel='noopener noreferrer'>
+                                            US20070248724A1
+                                        </a>
+                                    </td>
+                                    <td>VRE phage and SCLPX</td>
+                                    <td>
+                                        <i>Campylobacter</i>,
+                                        <i>Eschirichia coli 0157:H7</i>,
+                                        <i>Listeria</i>,
+                                        <i>Stapholocoocus</i>,
+                                        <i>Salmonella</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">15</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20050175991A1/en?oq=US20050175991" target='_blank' rel='noopener noreferrer'>
+                                            US8003323B2
+                                        </a>
+                                    </td>
+                                    <td>Phage SA-36, SPT-1, MSP-71, LIST-3, ENT-7 and ECO-9</td>
+                                    <td>
+                                        <i>Vancomycin Resistant Enterococci (VRE)</i>,
+                                        <i>Staphylococcus</i>,
+                                        <i>Pseudomonas</i>,
+                                        <i>Campylobacter</i>,
+                                        <i>Eschirichia coli</i>,
+                                        <i>Salmonella</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">16</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2005059161A2/en?oq=WO+2005%2f05916.1+" target='_blank' rel='noopener noreferrer'>
+                                            WO2005059161
+                                        </a>
+                                    </td>
+                                    <td>LM-103 and LMP-102</td>
+                                    <td>
+                                        <i>Listeria monocytogenes</i>
+                                    </td>
+                                    <td>Honeydew and Apple</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1128/aem.69.8.4519-4526.2003" target='_blank' rel='noopener noreferrer'>[1]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">17</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US6699701?oq=US+6%2c699%2c701+B1" target='_blank' rel='noopener noreferrer'>
+                                            US6699701B1
+                                        </a>
+                                    </td>
+                                    <td>SCPLX-1</td>
+                                    <td>
+                                        <i>Salmonella enteritidis</i>
+                                    </td>
+                                    <td>Honeydew and Apple</td>
+                                    <td>
+                                        <a href="https://doi.org/10.4315/0362-028x-64.8.1116" target='_blank' rel='noopener noreferrer'>[1]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">18</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US7507571B2/en?oq=US7507571B2" target='_blank' rel='noopener noreferrer'>
+                                            US7507571B2
+                                        </a>,
+                                        <a href="https://patents.google.com/patent/US8685697B1/en?oq=US8685697+B1" target='_blank' rel='noopener noreferrer'>
+                                            US8685697B1
+                                        </a>
+                                    </td>
+                                    <td>ListShield</td>
+                                    <td>
+                                        <i>Listeria monocytogenes</i>
+                                    </td>
+                                    <td>Lettuce, cheese, smoked salmon, frozen entrées, apples / Cheese</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1016/j.fm.2015.06.006" target='_blank' rel='noopener noreferrer'>[1]</a>,
+                                        <a href="https://doi.org/10.3168/jds.2019-16474" target='_blank' rel='noopener noreferrer'>[2]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">19</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2016118738A1/fr?oq=WO2016118738A1" target='_blank' rel='noopener noreferrer'>
+                                            WO2016118738A1
+                                        </a>
+                                    </td>
+                                    <td>ShigaShield</td>
+                                    <td>
+                                        <i>Shigella sp.</i>
+                                    </td>
+                                    <td>Lettuce, salmon, chicken, corned beef, yogurt and melon</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1371/journal.pone.0175256" target='_blank' rel='noopener noreferrer'>[1]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">20</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US7674467B2/en?oq=us7%2c674%2c467" target='_blank' rel='noopener noreferrer'>
+                                            US7674467B2
+                                        </a>,
+                                        <a href="https://patents.google.com/patent/US8685696?oq=US8685696B2" target='_blank' rel='noopener noreferrer'>
+                                            US8685696B2
+                                        </a>
+                                    </td>
+                                    <td>SalmoFresh</td>
+                                    <td>
+                                        <i>Salmonella enterica</i>
+                                    </td>
+                                    <td>Lettuce, Sprouts / Gala apples, romaine lettuces and cantaloupe</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1016/j.ijfoodmicro.2019.108250" target='_blank' rel='noopener noreferrer'>[1]</a>,
+                                        <a href="https://doi.org/10.1111/jfs.12763" target='_blank' rel='noopener noreferrer'>[2]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">21</th>
+                                    <td>Intralytix, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US7674467B2/en?oq=us7%2c674%2c467" target='_blank' rel='noopener noreferrer'>
+                                            US7674467B2
+                                        </a>,
+                                        <a href="https://patents.google.com/patent/US8685696?oq=US8685696B2" target='_blank' rel='noopener noreferrer'>
+                                            US8685696B2
+                                        </a>
+                                    </td>
+                                    <td>SalmoLyse</td>
+                                    <td>
+                                        <i>Salmonella enterica</i>
+                                    </td>
+                                    <td>Turkey trim, chicken, tuna, cantaloupe and lettuce</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1080/21597081.2016.1220347" target='_blank' rel='noopener noreferrer'>[1]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">22</th>
+                                    <td>iNtRON Biotechnology Ltd.</td>
+                                    <td>KR</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/KR100941891B1/ko?oq=KR100941891B1" target='_blank' rel='noopener noreferrer'>
+                                            KR100941891B1
+                                        </a>
+                                    </td>
+                                    <td>SEP-1</td>
+                                    <td>
+                                        <i>Salmonella sp.</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">23</th>
+                                    <td>iNtRON Biotechnology Ltd.</td>
+                                    <td>KR</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/KR100941892B1/en?oq=KR100941892B1" target='_blank' rel='noopener noreferrer'>
+                                            KR100941892B1
+                                        </a>
+                                    </td>
+                                    <td>SGP-1</td>
+                                    <td>
+                                        <i>Salmonella sp.</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">24</th>
+                                    <td>JSC Biochimpharm</td>
+                                    <td>GE</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2019211635A1/en?oq=WO2019211635A1" target='_blank' rel='noopener noreferrer'>
+                                            WO2019211635A1
+                                        </a>
+                                    </td>
+                                    <td>DSM 32631, DSM 32629, DSM 32630, DSM 32634, DSM 32635, DSM 32612, DSM 32611, DSM 32610, DSM 32613, DSM 32614, DSM 32615, DSM 32616, DSM 32618 and DSM 32617</td>
+                                    <td>
+                                        <i>Staphylococcus aureus</i>,
+                                        <i>Streptococcus pyogenes</i>,
+                                        <i>Escherichia coli</i>,
+                                        <i>Proteus vulgaris</i>,
+                                        <i>Pseudomonas aeruginosa</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">25</th>
+                                    <td>Kennesaw State University Research and Service Foudation, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20180092386A1/en?oq=US20180092386" target='_blank' rel='noopener noreferrer'>
+                                            US20180092386A1
+                                        </a>
+                                    </td>
+                                    <td>&Phi;241</td>
+                                    <td>
+                                        <i>Eschirichia coli O157:H7</i>
+                                    </td>
+                                    <td>Vegetables, fruits, meats, dairy products and juices</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">26</th>
+                                    <td>Merck KGaA</td>
+                                    <td>DE</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/EP0743366A1/de?oq=EP++0743366A1" target='_blank' rel='noopener noreferrer'>
+                                            EP0743366A1
+                                        </a>
+                                    </td>
+                                    <td>A511</td>
+                                    <td>
+                                        <i>Listeria monocytogenes</i>
+                                    </td>
+                                    <td>Chocolate milk, mozzarella cheese brine, Hot dog, cabbage, smoked salmon / turkey packaged aerobically, turkey packaged anaerobically</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1128/aem.01711-08" target='_blank' rel='noopener noreferrer'>[1]</a>,
+                                        <a href="https://doi.org/10.1016/j.fm.2017.04.015" target='_blank' rel='noopener noreferrer'>[2]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">27</th>
+                                    <td>Micreos Food Safety B. V.</td>
+                                    <td>NL</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20170143778A1/en?oq=US20170143778A1" target='_blank' rel='noopener noreferrer'>
+                                            US20170143778A1
+                                        </a>
+                                    </td>
+                                    <td>Salmonelex</td>
+                                    <td>
+                                        <i>Salmonella enterica</i>
+                                    </td>
+                                    <td>Lettuce / Beef, Pork, Chicken and Turkey</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1016/j.ijfoodmicro.2015.07.015" target='_blank' rel='noopener noreferrer'>[1]</a>,
+                                        <a href="https://doi.org/10.1016/j.meatsci.2017.01.001" target='_blank' rel='noopener noreferrer'>[2]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">28</th>
+                                    <td>Micreos Food Safety B. V.</td>
+                                    <td>NL</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2013169102A1/en?oq=JP2015525061A" target='_blank' rel='noopener noreferrer'>
+                                            WO2013169102A1
+                                        </a>
+                                    </td>
+                                    <td>S16</td>
+                                    <td>
+                                        <i>Salmonella sp.</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">29</th>
+                                    <td>Micreos Food Safety B. V.</td>
+                                    <td>NL</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2019229079A1/en?oq=WO2019229079A1" target='_blank' rel='noopener noreferrer'>
+                                            WO2019229079A1
+                                        </a>
+                                    </td>
+                                    <td>EP75 and EP335</td>
+                                    <td>
+                                        <i>Eschirichia coli O157</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">30</th>
+                                    <td>Microbial Institute for Fermentation Industry</td>
+                                    <td>KR</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/KR101443140B1/en?oq=KR101443140B1" target='_blank' rel='noopener noreferrer'>
+                                            KR101443140B1
+                                        </a>
+                                    </td>
+                                    <td>BCP8-2 or BCP901</td>
+                                    <td>
+                                        <i>Bacillus cereus</i>
+                                    </td>
+                                    <td>Miso, chungkukjang, kochujang, pickles and meju</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">31</th>
+                                    <td>Novolytics Limited</td>
+                                    <td>UK</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2009044163A2/fr?oq=WO2009%2f044163+A2" target='_blank' rel='noopener noreferrer'>
+                                            WO2009044163A2
+                                        </a>
+                                    </td>
+                                    <td>team1, P68 and LHI-MUT</td>
+                                    <td>
+                                        <i>Staphylococcus aureus</i>
+                                    </td>
+                                    <td>Cheddar cheese curd</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1016/j.ijfoodmicro.2015.10.001" target='_blank' rel='noopener noreferrer'>[1]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">32</th>
+                                    <td>Nymox Pharmaceutical Corp</td>
+                                    <td>CA</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/EP1337626A2/de?oq=EP1337626A2" target='_blank' rel='noopener noreferrer'>
+                                            EP1337626A2
+                                        </a>
+                                    </td>
+                                    <td>B1, B3, 119U, and 146A</td>
+                                    <td>
+                                        <i>Eschirichia coli</i>
+                                    </td>
+                                    <td>Fruit juices, vegetable juices, produce, poultry, beef, lamb and pork</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">33</th>
+                                    <td>Oklahoma State University</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2017214135A1/en?oq=WO2017214135A1" target='_blank' rel='noopener noreferrer'>
+                                            WO2017214135A1
+                                        </a>
+                                    </td>
+                                    <td>P1 (C-1), P2 (C-2), P3 (C-3), P4 (C-4), P5 (C-5), P6 (D-2), P7 (G-5), P8 (A-7), P9 (A-7), P10 (A-1), P11 (A-5), P12 (D-2), P13 (D-5), P14 (I-1), P15 (I-2), P16 (I-4), P17 (I-5), P18 (I-1), P19 (I-2), P20 (I-3), P21 (I-4), P22 (I-5), J-1 (D-1), J-2 (D-2), J-3 (D-3), J-4 (B-1), J-5 (B-3), J-6 (B-4), J-7 (B-5), J-8 (I-2), J-9 (I-3), J-10 (I-4), J-11 (D-1), J-12 (D-2), J-13 (D-3), J-14 (D-4), J-15 (D-5), J-16 (B-1), J-17 (B-2), J-18 (B-3), J-19 (B-4), J-20 (B-5), J-21 (D-1), J-22 (D-2), J-23 (D-3), J-24 (D-4), J-25 (D-5), J-26 (I-1), J-27 (I-2), J-28 (I-3), J-29 (I-4) and J-30 (I-5)</td>
+                                    <td>
+                                        <i>Escherichia coli (STEC)</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">34</th>
+                                    <td>Targanta Therapeutics, Inc.</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20040091856A1/en?oq=US20040091856A1" target='_blank' rel='noopener noreferrer'>
+                                            US20040091856A1
+                                        </a>
+                                    </td>
+                                    <td>phi812, 44AHJD and phi2</td>
+                                    <td>
+                                        <i>Staphylococcus aureus</i>
+                                    </td>
+                                    <td>Cheddar cheese curd</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1016/j.ijfoodmicro.2015.10.001" target='_blank' rel='noopener noreferrer'>[1]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">35</th>
+                                    <td>Universidad De Los Andes</td>
+                                    <td>CO</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/BR112018010737A2/pt?oq=BR112018010737+(A2)" target='_blank' rel='noopener noreferrer'>
+                                            BR112018010737A2
+                                        </a>
+                                    </td>
+                                    <td>cpSan13, cpSan14, cpSan15, cpSan23, cpSan24 and cpSan25</td>
+                                    <td>
+                                        <i>Salmonella Enteritidis</i>,
+                                        <i>Salmonella Typhimurium</i>,
+                                        <i>Salmonella Paratyphi B</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">36</th>
+                                    <td>Universitat Aut&ograve;noma de Barcelona</td>
+                                    <td>ES</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/WO2013014273A1/en?oq=WO2013014273+A1" target='_blank' rel='noopener noreferrer'>
+                                            WO2013014273A1
+                                        </a>
+                                    </td>
+                                    <td>UAB_Phi20, UAB_Phi78 and UAB_Phi87</td>
+                                    <td>
+                                        <i>Salmonella Typhimurium UA1872</i>,
+                                        <i>Salmonella Enteritidis UA1894</i>
+                                    </td>
+                                    <td>Pig skin, Chicken Breast and Eggs</td>
+                                    <td>
+                                        <a href="https://doi.org/10.1016/j.ijfoodmicro.2013.05.009" target='_blank' rel='noopener noreferrer'>[1]</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">37</th>
+                                    <td>University of Arkansas</td>
+                                    <td>US</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20110200561A1/en?oq=US2011200561A1" target='_blank' rel='noopener noreferrer'>
+                                            US2011200561A1
+                                        </a>
+                                    </td>
+                                    <td>PHL4, PHL5, PHL16, PHL 24, phage 8 and phage 10</td>
+                                    <td>
+                                        <i>Salmonella sp.</i>,
+                                        <i>Klebsiella sp.</i>,
+                                        <i>Escherichia sp.</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">38</th>
+                                    <td>University of Guelph</td>
+                                    <td>CA</td>
+                                    <td>
+                                        <a href="https://patents.google.com/patent/US20160024478A1/en?oq=US2016024478A1" target='_blank' rel='noopener noreferrer'>
+                                            US2016024478A1
+                                        </a>
+                                    </td>
+                                    <td>Salmonella Newport Phage (CGG 4-1 phage)</td>
+                                    <td>
+                                        <i>Campylobacterjejuni</i>,
+                                        <i>Clostridum botulinum</i>,
+                                        <i>Clostridium perfringens</i>,
+                                        <i>Salmonella enterica</i>,
+                                        <i>Cronobacter</i>,
+                                        <i>Eschirichia coli</i>,
+                                        <i>Listeria monocytogenes</i>,
+                                        <i>Vibrio and Shigella</i>
+                                    </td>
+                                    <td>General</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--Footer-->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+                        <!--btn btn-default | btn btn-primary | btn btn-outline-primary -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const mymap = L.map('mapid').setView([36, 16], 3);
+            //mymap.zoomControl.setPosition('bottomright');
+
+            // balls: 16
+            // phages: 23
+            // pointers: 23
+            const width_ = 23;
+            const height_ = 23;
+            const iconPhage = L.icon({
+                iconUrl: 'resources/image/phage03s.png',
+                iconSize: [width_, height_],
+                iconAnchor: [width_/2, height_/2],
+            });
+
+            var locations = [
+                [37.44163, 127.176434, 'iNtRON Biotechnology Ltd.', 'general'],
+                [59.960435, 30.318483, 'Aleshkin Andrej Vladimirovich'],
+                [48.044960, 11.657525, 'Airbus Defence and Space GmbH', 'general'],
+                [37.56397, 127.003271, 'CJ Cheiljedang Corporation', 'general'],
+                [38.874979, 121.531623, 'Dalian University of Technology'],
+                [43.616124, -84.200582, 'Dow Global Technologies Llc'],
+                [50.887424, 5.967873, 'DSM IP Assets B.V.'],
+                [52.080257, 4.309537, 'Exponential Biotherapies, Inc.'],
+                [37.450762, 127.128579, 'Gachon university of industry-academic cooperation foundation', 'general'],
+                [30.470669, 114.356746, 'Huazhong Agricultural University'],
+                [39.1758421, -76.815309, 'Intralytix, Inc.'],
+                [41.728387, 44.77494, 'JSC Biochimpharm', 'general'],
+                [34.038174, -84.582674, 'Kennesaw State University Research and Service Foudation, Inc.'],
+                [49.895432, 8.65359, 'Merck KGaA'],
+                [51.974198, 5.647538, 'Micreos Food Safety B. V.'],
+                [35.36741, 127.105807, 'Microbial Institute for Fermentation Industry'],
+                [53.789686, -2.649007, 'Novolytics Limited'],
+                [45.495976, -73.700324, 'Nymox Pharmaceutical Corp'],
+                [36.126972, -97.073829, 'Oklahoma State University', 'general'],
+                [39.763377, -86.147168, 'Targanta Therapeutics, Inc.'],
+                [4.601423, -74.066154, 'Universidad De Los Andes', 'general'],
+                [41.500718, 2.108136, 'Universitat Autònoma de Barcelona'],
+                [36.06867, -94.17485, 'University of Arkansas, US Department of Agriculture', 'general'],
+                [43.532613, -80.226052, 'University of Guelph', 'general']
+            ];
+
+            for (var i = 0; i < locations.length; i++) {
+                /*marker = new L.marker([locations[i][0], locations[i][1]], { icon: iconPhage })
+                                .bindPopup(locations[i][2])
+                                .addTo(mymap);*/
+                alter_color = false;
+                if (locations[i][3] == 'general') {
+                    alter_color = true;
+                }
+                marker = new L.userMarker([locations[i][0], locations[i][1]], {pulsing: true, alterColor: alter_color})
+                                .bindPopup(locations[i][2])
+                                .addTo(mymap);
+            }
+            //L.marker([-12.04318, -77.02824]).bindPopup('Lima').addTo(mymap);
+            //L.marker([-12.04318, -77.02824], { icon: iconPhage }).bindPopup('Lima').addTo(mymap);
+            //L.userMarker([-12.04318, -77.02824], {pulsing: true, alterColor: true}).bindPopup('Lima').addTo(mymap);
+
+            const tileUrl = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png';
+            const attribution = '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+            const tiles = L.tileLayer(tileUrl, { attribution });
+            tiles.addTo(mymap);
+
+            const tileUrl_osm = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+            //var defaultBase = L.tileLayer.provider('Stamen.TonerLite').addTo(mymap);
+            const baseLayers = {
+                'ArcGIS Map': tiles,
+                'Open Street Map': L.tileLayer(tileUrl_osm, { attribution }),
+                //'Stamen Toner': L.tileLayer.provider('Stamen.TonerLite'),
+                'USGS TNM': L.tileLayer.provider('USGSTNM'),
+                'ESRI Imagery': L.tileLayer.provider('Esri.WorldImagery'),
+                'ESRI Ocean Basemap': L.tileLayer.provider('Esri.OceanBasemap'),
+                'OSM Topo': L.tileLayer.provider('OpenTopoMap')
+            };
+
+            // add layer switch control
+            L.control.groupedLayers(baseLayers).addTo(mymap);
+
+            // add scale bar to map
+            L.control.scale({ position: 'bottomleft' }).addTo(mymap);
+
+            // Overview mini map
+            const Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+            });
+            const miniMap = new L.Control.MiniMap(Esri_WorldTopoMap, {
+                toggleDisplay: true,
+                minimized: false,
+                position: 'bottomleft'
+            }).addTo(mymap);
+
+            //Legend specific
+            var legend = L.control({ position: "bottomright" });
+            legend.onAdd = function(mymap) {
+                var div = L.DomUtil.create("div", "legend");
+                //div.innerHTML += "<h4>Use</h4>";
+                div.innerHTML += '<i class="cicle-blue"></i><span>Specific</span><br>';
+                div.innerHTML += '<i class="cicle-red"></i><span>General</span><br>';
+                return div;
+            };
+            legend.addTo(mymap);
+
+            // Easy Button
+            L.easyButton('fa-map', function(){
+              $('#modal-detail').modal('show');
+            }, 'Click for details of patents').addTo(mymap);
+        </script>
+    </body>
+</html>
