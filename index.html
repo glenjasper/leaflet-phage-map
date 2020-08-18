@@ -873,17 +873,32 @@
             const tiles = L.tileLayer(tileUrl, { attribution });
             tiles.addTo(mymap);
 
-            const tileUrl_osm = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            // https://leaflet-extras.github.io/leaflet-providers/preview
+            const tile_OSM_mapnik = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            const tile_OSM_hot = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+            const tile_Stamen_Watercolor = 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png'
+            const tile_Esri_DeLorme = 'https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}.png'
+            const tile_Esri_WorldTopoMap = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png'
+            const tile_Esri_NatGeoWorldMap = 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.png'
+            const tile_Wikimedia = 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png'
+            const tile_GeoportailFrance_ignMaps = 'https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg&LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
 
             //var defaultBase = L.tileLayer.provider('Stamen.TonerLite').addTo(mymap);
             const baseLayers = {
-                'ArcGIS Map': tiles,
-                'Open Street Map': L.tileLayer(tileUrl_osm, { attribution }),
-                //'Stamen Toner': L.tileLayer.provider('Stamen.TonerLite'),
-                'USGS TNM': L.tileLayer.provider('USGSTNM'),
-                'ESRI Imagery': L.tileLayer.provider('Esri.WorldImagery'),
-                'ESRI Ocean Basemap': L.tileLayer.provider('Esri.OceanBasemap'),
-                'OSM Topo': L.tileLayer.provider('OpenTopoMap')
+                'ArcGIS': tiles,
+                'OSM.Mapnik': L.tileLayer(tile_OSM_mapnik, { attribution }),
+                'OSM.Hot': L.tileLayer(tile_OSM_hot, { attribution }),
+                'OSM.Topo': L.tileLayer.provider('OpenTopoMap'),
+                //'Stamen.Watercolor': L.tileLayer(tile_Stamen_Watercolor, { attribution }),
+                //'Stamen.Toner': L.tileLayer.provider('Stamen.TonerLite'),
+                'ESRI.DeLorme': L.tileLayer(tile_Esri_DeLorme, { attribution }),
+                'ESRI.WorldTopoMap': L.tileLayer(tile_Esri_WorldTopoMap, { attribution }),
+                'ESRI.NatGeoWorldMap': L.tileLayer(tile_Esri_NatGeoWorldMap, { attribution }),
+                //'ESRI.Imagery': L.tileLayer.provider('Esri.WorldImagery'),
+                //'ESRI.Ocean.BaseMap': L.tileLayer.provider('Esri.OceanBasemap'),
+                //'GeoportailFrance.ignMaps': L.tileLayer(tile_GeoportailFrance_ignMaps, { attribution }),
+                'USGS.TNM': L.tileLayer.provider('USGSTNM'),
+                'Wikimedia': L.tileLayer(tile_Wikimedia, { attribution }),
             };
 
             // add layer switch control
@@ -893,16 +908,16 @@
             L.control.scale({ position: 'bottomleft' }).addTo(mymap);
 
             // Overview mini map
-            const Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+            /*const Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
                 attribution: '&copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
             });
             const miniMap = new L.Control.MiniMap(Esri_WorldTopoMap, {
                 toggleDisplay: true,
                 minimized: false,
                 position: 'bottomleft'
-            }).addTo(mymap);
+            }).addTo(mymap);*/
 
-            //Legend specific
+            // Legend specific
             var legend = L.control({ position: "bottomright" });
             legend.onAdd = function(mymap) {
                 var div = L.DomUtil.create("div", "legend");
@@ -915,7 +930,7 @@
 
             // Easy Button
             L.easyButton('fa-map', function(){
-              $('#modal-detail').modal('show');
+                $('#modal-detail').modal('show');
             }, 'Click for details of patents').addTo(mymap);
         </script>
     </body>
